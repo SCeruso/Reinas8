@@ -10,6 +10,9 @@ public class Main {
 	public static void main(String[] args) {
 		ChessBoard tablero = new ChessBoard();
 		
+		tablero.addCriterion(new ClassicalCriterion());
+		//tablero.addCriterion(new NewCriterion());
+		
 		tablero.addQueen(new Point(2, 2));
 		tablero.addQueen(new Point(1,0));
 		tablero.addQueen(new Point(0, 3));

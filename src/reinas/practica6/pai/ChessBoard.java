@@ -13,6 +13,7 @@ public class ChessBoard {
 	private State[][] board; 
 	private ArrayList<Point> queens;
 	private static final int COLROWNUMBER = 8;
+	private CriterionList criterions;
 	
 	/**
 	 * Crea un tablero 8x8 de casillas vacías.
@@ -21,6 +22,7 @@ public class ChessBoard {
 	public ChessBoard() {
 		board = new State[8][8];
 		queens = new ArrayList<Point>();
+		criterions = new CriterionList();
 		
 		for (int i = 0; i < COLROWNUMBER; i++)
 			for (int j = 0; j < COLROWNUMBER; j++)
@@ -36,6 +38,21 @@ public class ChessBoard {
 		}
 	}
 
+	public ArrayList<Point> getQueens() {
+		return queens;
+	}
+
+	public void setQueens(ArrayList<Point> queens) {
+		this.queens = queens;
+	}
+
+	public static int getColrownumber() {
+		return COLROWNUMBER;
+	}
+
+	public void addCriterion(IDisableCriterion criterion) {
+		criterions.addCriterion(criterion);
+	}
 	/**
 	 * Añade una dama en la posición indicada.
 	 * @param cell Posición de la dama.
@@ -50,7 +67,7 @@ public class ChessBoard {
 			setState(cell, State.QUEEN);
 		}		
 	}
-	private void setState(Point cell, State state) throws ArrayIndexOutOfBoundsException{
+	public void setState(Point cell, State state) throws ArrayIndexOutOfBoundsException{
 		try {
 			this.board[cell.x][cell.y] = state;
 		}
@@ -64,10 +81,11 @@ public class ChessBoard {
 	 * @param cell
 	 */
 	public void disableCells(Point cell) {
-		disableRow(cell);
+		/*disableRow(cell);
 		disableColumn(cell);
 		disableDiagonals(cell);
-		disableLines(cell);
+		disableLines(cell);*/
+		criterions.applyCriterions(this, cell);
 	}
 	
 	/**
