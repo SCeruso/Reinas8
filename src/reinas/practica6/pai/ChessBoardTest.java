@@ -1,11 +1,10 @@
 package reinas.practica6.pai;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.awt.Point;
 
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class ChessBoardTest {
 
@@ -22,7 +21,8 @@ public class ChessBoardTest {
 	@Test
 	public void testAddQueen() {
 		ChessBoard board = new ChessBoard();
-		
+		board.addCriterion(new ClassicalCriterion());
+		board.addCriterion(new NewCriterion());
 		board.addQueen(new Point(0, 0));
 		
 		assertEquals(board.getCellState(new Point(0, 0)), State.QUEEN);

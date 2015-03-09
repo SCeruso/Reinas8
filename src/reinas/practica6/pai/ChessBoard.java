@@ -20,7 +20,7 @@ public class ChessBoard {
 	 * Inicializa el vector con la posicion de las 8 damas.
 	 */
 	public ChessBoard() {
-		board = new State[8][8];
+		board = new State[COLROWNUMBER][COLROWNUMBER];
 		queens = new ArrayList<Point>();
 		criterions = new CriterionList();
 		
@@ -28,7 +28,18 @@ public class ChessBoard {
 			for (int j = 0; j < COLROWNUMBER; j++)
 				board[i][j] = State.EMPTY;
 	}
-
+	
+	public ChessBoard(ChessBoard other) {
+		this.board = new State[COLROWNUMBER][COLROWNUMBER];
+		this.queens = new ArrayList<Point>();
+		this.criterions = other.criterions;
+		
+		for (int i = 0; i < COLROWNUMBER; i++)
+			for (int j = 0; j < COLROWNUMBER; j++)
+				this.board[i][j]= other.board[i][j];
+		for (int i = 0; i < other.getQueens().size(); i++)
+			this.queens.add(other.getQueens().get(i));
+	}
 	public State getCellState(Point cell) throws ArrayIndexOutOfBoundsException {
 		try {
 			return board[cell.x][cell.y];
@@ -86,67 +97,6 @@ public class ChessBoard {
 		disableDiagonals(cell);
 		disableLines(cell);*/
 		criterions.applyCriterions(this, cell);
-	}
-	
-	/**
-	 * Marca como ilegales las filas a las que puede amenazar la dama en cell.
-	 * @param cell Posición de la dama.
-	 */
-	private void disableRow(Point cell){
-		for (int i = 0; i < COLROWNUMBER; i++) 
-			setState(new Point(i, cell.y), State.DISABLED);	
-	}
-	/**
-	 * Marca como ilegales las columnas a las que puede amenazar la dama en cell.
-	 * @param cell Posición de la dama.
-	 */
-	private void disableColumn(Point cell) {
-		for (int i = 0; i < COLROWNUMBER; i++)
-			setState(new Point(cell.x, i), State.DISABLED);
-	}
-	/**
-	 * Marca como ilegales las diagonales a las que puede amenazar la dama en cell.
-	 * @param cell Posición de la dama.
-	 */
-	private void disableDiagonals(Point cell) {//		Hacer con if-else para mejorar eficiencia??
-		for (int i = 0; i < COLROWNUMBER; i++) {
-			try {
-				setState(new Point(cell.x - i, cell.y - i), State.DISABLED);
-			}
-			catch (ArrayIndexOutOfBoundsException e) {}
-			try {
-				setState(new Point(cell.x + i, cell.y + i), State.DISABLED);
-			}
-			catch (ArrayIndexOutOfBoundsException e) {}
-			try {
-				setState(new Point(cell.x + i, cell.y - i), State.DISABLED);
-			}
-			catch (ArrayIndexOutOfBoundsException e) {}
-			try {
-				setState(new Point(cell.x - i, cell.y + i), State.DISABLED);
-			}
-			catch (ArrayIndexOutOfBoundsException e) {}
-		}
-	}
-	/**
-	 * Marca como ilegales las lineas que traza la dama en cell con las demás damas.
-	 * @param cell Posición de la dama.
-	 */
-	private void disableLines(Point cell) {
-		Line recta;
-		Point toDisable;
-		
-		for (int i = 0; i < queens.size(); i++){
-			if (cell != queens.get(i))
-				recta = new Line(cell, queens.get(i));
-			else
-				continue;
-			for (int j = 0; j < COLROWNUMBER; j++)
-				if ((toDisable = recta.integerEvaluation(j)) != null)
-					if ((toDisable.y < 8 && toDisable.y >= 0))
-						if (getCellState(toDisable) == State.EMPTY)
-							setState(toDisable, State.DISABLED);					
-		}
 	}
 	
 	public String toString() {
